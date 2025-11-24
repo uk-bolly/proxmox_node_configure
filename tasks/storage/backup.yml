@@ -1,0 +1,20 @@
+---
+
+- name: Add NFS storage to node
+  when: proxmox_single_node
+  community.proxmox.proxmox_storage:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_token_id: "{{ proxmox_api_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    validate_certs: false
+    node: "{{ proxmox_node }}"
+    type: pbs
+    pbs_options:
+      server: "{{ backup_storage }}"
+      username: "{{ backup_username }}"
+      password: "{{ backup_password }}"
+      datastore: "{{ backup_datastore }}"
+      fingerprint: "{{ backup_fingerprint }"
+      export: "{{ backup_export }}"
+    content: ["backup"]

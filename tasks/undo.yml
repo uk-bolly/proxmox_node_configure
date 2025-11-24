@@ -1,0 +1,60 @@
+---
+
+- name: Correcting Proxmox VE Sources - firmware.conf
+  when: not proxmox_enterprise
+  ansible.builtin.file:
+    path: /etc/apt/apt.conf.d/no-{{ ansible_distribution_release }}-firmware.conf
+    state: absent
+
+- name: Disable Proxmox VE enterprise sources
+  when:
+    - not proxmox_enterprise
+    - proxmox_disable_enterprise_sources
+  ansible.builtin.lineinfile:
+    backrefs: true
+    create: true
+    path: /etc/apt/sources.list.d/pve-enterprise.list
+    regexp: ^(#?)\s*(deb https:\/\/enterprise.proxmox.com\/debian\/pve {{ ansible_distribution_release }} pve-enterprise)
+    line: '\2'
+
+- name: Add no subscription repo
+  when:
+  - not proxmox_enterprise
+  - proxmox_no_subscription_repo
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/apt/sources.list.d/pvetest-for-beta.sources
+    - /etc/apt/sources.list.d/pve-install-repo.sources
+
+- name: Disable subscription reminder
+  when: proxmox_disable_subscription_reminder
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /usr/local/bin/pve-remove-nag.sh
+    - /etc/apt/apt.conf.d/no-nag-script
+  notify: Reinstall proxmox-toolkit
+
+- name: Disable unnecessary HA resources - single node
+  when:
+  - proxmox_single_node
+  - proxmox_ha_disable
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+  - pve-ha-lrm
+  - pve-ha-crm
+
+- name: Disable unnecessary corosync resources - single node
+  when:
+  - proxmox_single_node
+  - proxmox_corosync_disable
+  ansible.builtin.systemd:
+    name: corosync
+    enabled: true
+    state: started

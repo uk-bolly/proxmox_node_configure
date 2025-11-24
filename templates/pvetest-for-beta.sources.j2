@@ -1,0 +1,14 @@
+# PVE beta test repo
+{% if not proxmox_beta_enable %}
+#Types: deb
+#URIs: http://download.proxmox.com/debian/pve
+#Suites: {{ ansible_distribution_release }}
+#Components: pvetest
+#Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+{% else %}
+Types: deb
+URIs: http://download.proxmox.com/debian/pve
+Suites: {{ ansible_distribution_release }}
+Components: pvetest
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+{% endif %}

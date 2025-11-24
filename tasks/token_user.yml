@@ -1,0 +1,38 @@
+---
+
+- name: Get current api user
+  ansible.builtin.shell: "pveum user list | grep {{ proxmox_api_user }}"
+  changed_when: false
+  failed_when: discovered_api_user.rc not in [ 0, 1 ]
+  register: discovered_api_user
+
+- name: Create initial user for token and api
+  when: discovered_api_user.rc == 1
+  ansible.builtin.command: pveum user add {{ proxmox_api_user }} -comment "PVE api user for use by ansible"
+  changed_when: true
+
+- name: Check if api user in group
+  ansible.builtin.command: "pveum group list"
+  changed_when: false
+  register: discovered_user_groups
+
+- name: Add Role for api users
+  ansible.builtin.shell: |
+    pveum role add api_role --privs "{{ api_privileges | join(',') }}"
+  changed_when: true
+
+- name: Create api_admin_group
+  when:
+  - discovered_user_groups.stdout is defined
+  - "'api_admin' not in discovered_user_groups.stdout"
+  ansible.builtin.shell: |
+    pveum group add api_admins -comment "API admin users"
+    pveum acl modify / -group api_admins -role PVEAdmin
+  changed_when: false
+
+- name: Add user to group
+  when:
+  - discovered_user_groups.stdout is defined
+  - "'api_admin' not in discovered_user_groups.stdout"
+  ansible.builtin.command: "pveum user modify {{ proxmox_api_user }} -group api_admins"
+  changed_when: true

@@ -1,0 +1,25 @@
+---
+
+- name: Ability to add ISOs to the cluster/node
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: iso
+    validate_certs: false
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ item.url }}"
+    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
+    # checksum_algorithm: sha256
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ ISOs }}"
+  loop_control:
+    label: "{{ item.url }}"
+  become: false
+  run_once: true
+  delegate_to: localhost

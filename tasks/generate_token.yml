@@ -1,0 +1,18 @@
+---
+
+- name: Delete current user token
+  ansible.builtin.command: "pveum user token delete {{ proxmox_api_user }} {{ proxmox_token_id }} "
+  changed_when: discovered_delete_token.rc == 0
+  failed_when: discovered_delete_token.rc not in [ 0, 255]
+  register: discovered_delete_token
+
+- name: Create token
+  ansible.builtin.command: pveum user token add {{ proxmox_api_user }} {{ proxmox_token_id }} --privsep 0 --comment 'Created by ansible playbook' -output-format=json
+  changed_when: true
+  register: discovered_api_token
+
+- name: Set fact for token
+  vars:
+    token: "{{ discovered_api_token.stdout | from_json }}"
+  ansible.builtin.set_fact:
+    proxmox_api_token_secret: "{{ token.value }}"

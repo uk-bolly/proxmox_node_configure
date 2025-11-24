@@ -1,0 +1,7 @@
+---
+
+- name: Playbook to configure proxmox nodes
+  hosts: all
+  become: true
+  roles:
+    - role: "{{ playbook_dir }}"

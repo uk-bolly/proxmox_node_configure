@@ -1,0 +1,22 @@
+---
+
+- name: Reinstall proxmox-toolkit
+  ansible.builtin.command: apt --reinstall install proxmox-widget-toolkit
+  changed_when: true
+
+- name: Check for reboot require file
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: handler_reboot_required
+  listen: Reboot check
+
+- name: Set reboot fact
+  when: handler_reboot_required.stat.exists
+  ansible.builtin.set_fact:
+    reboot_required: true
+  listen: Reboot check
+
+- name: Reboot system
+  when: reboot_required
+  ansible.builtin.reboot:
+
