@@ -2,6 +2,9 @@
 
 ## This is still in development
 
+## Credits
+- @tteck for the original scripts that have inspired this work
+
 ## Overview
 
 Once a system has been built before any other configuration takes place. This can setup your based on variables below:
