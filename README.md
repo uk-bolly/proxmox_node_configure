@@ -78,8 +78,9 @@ apply_updates: true
 ## Disable ipv6
 disable_ipv6: true
 ```
+### token_user.yml
 
-- Creates an api user and group and role with restriuced permissions
+- Creates an api user and group and role with restricted permissions
   - Utilises CLI
 
 ### api vars
@@ -96,8 +97,11 @@ proxmox_api_port: 8006
 proxmox_api_user: 'ansible_api@pve'
 proxmox_token_id: ansible
 ```
+### generate_token
 
 - Creates an API token
+
+### Storage
 
 - Adds Storage (via API)
   Of types
@@ -105,7 +109,7 @@ proxmox_token_id: ansible
   - ISCSI (TODO)
   - Backup (TODO)
 
-### Storage vars
+#### Storage vars
 
 ```yml
 nfs_storage: false
@@ -138,33 +142,75 @@ iscsi_content:
       - "import"
 
 ```
-
+### ISOS
 - Add ISO files (via API)
   - Will download a list of ISOs to the ISO storage listed
 
-### vars for ISOs
+#### ISO Vars
+- These are set in vars/main.yml currently
+
 
 ```yml
-ISOs:
-  # Alma
-  - url: https://repo.almalinux.org/almalinux/9.6/isos/x86_64/AlmaLinux-9.6-x86_64-minimal.iso
-  - url: https://repo.almalinux.org/almalinux/8.10/isos/x86_64/AlmaLinux-8.10-x86_64-minimal.iso
-  # Debian
-  - url: https://cdimage.debian.org/cdimage/archive/12.12.0/amd64/iso-cd/debian-12.12.0-amd64-netinst.iso
-  - url: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.2.0-amd64-netinst.iso
-  # Rocky
-  - url: https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.6-x86_64-minimal.iso
-  - url: https://download.rockylinux.org/pub/rocky/8/isos/x86_64/Rocky-8.10-x86_64-minimal.iso
-  # opensuse
-  - url: https://download.opensuse.org/tumbleweed/iso/openSUSE-Tumbleweed-NET-x86_64-Current.iso
-  - url: https://download.opensuse.org/distribution/leap/16.0/offline/Leap-16.0-online-installer-x86_64.install.iso
-  # Oracle
-  - url: https://yum.oracle.com/ISOS/OracleLinux/OL9/u6/x86_64/OracleLinux-R9-U6-x86_64-boot.iso
-  - url: https://yum.oracle.com/ISOS/OracleLinux/OL10/u0/x86_64/OracleLinux-R10-U0-x86_64-boot.iso
-  # Ubuntu
-  - url: https://releases.ubuntu.com/22.04/ubuntu-22.04.5-live-server-amd64.iso
-  - url: https://releases.ubuntu.com/24.04.3/ubuntu-24.04.3-live-server-amd64.iso
+# EL Vendors and release
+download_el: true
+download_alma: true
+alma_url: https://repo.almalinux.org/almalinux/
+alma_amd64: true
+alma_arm64: true
+download_oracle: true
+oracle_url: https://yum.oracle.com/ISOS/OracleLinux/
+oracle_amd64: true
+oracle_arm64: true
+# Note you will need either enterprise or developer account to enable this
+download_rhel: false
+rhel_url:
+download_rocky: true
+rocky_url: https://download.rockylinux.org/pub/rocky/
+rocky_amd64: true
+rocky_arm64: true
+el_releases:
+  - major: 8
+    minor: 10
+  - major: 9
+    minor: 6
+  - major: 10
+    minor: 0
+
+# SUSE based releases
+download_suse: true
+suse_amd64: true
+suse_arm64: false
+suse_releases:
+  - major: 15
+    minor: 6
+    osname: Leap
+suse_url: https://download.opensuse.org/distribution/leap/
+
+# Debian based releases
+download_deb: true
+deb_rels:
+  - major: 12
+    minor: 12
+  - major: 13
+    minor: 2
+
+debian_url: https://cdimage.debian.org/
+
+# Ubuntu Releases
+download_ubuntu: true
+ubuntu_amd64: true
+ubuntu_arm64: true
+ubuntu_releases:
+  - major: 22
+    minor: '04'
+    min: 5
+  - major: 24
+    minor: '04'
+    min: 3
+ubuntu_url: https://releases.ubuntu.com/
   ```
+
+### Undo.yml
 
 - Undo - if needed (WIP)
 
