@@ -1,0 +1,53 @@
+---
+
+- name: Ability to add ISOs to the cluster/node | Oracle
+  when: oracle_amd64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: iso
+    validate_certs: false
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ oracle_url }}/OL{{ item.major }}/u{{ item.minor }}/x86_64/OracleLinux-R{{ item.major }}-U{{ item.minor }}-x86_64-boot.iso"
+    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
+    # checksum_algorithm: sha256
+    template: "Oracle-{{ item.major }}.{{ item.minor }}-x86_64-minimal.iso"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ el_releases }}"
+  loop_control:
+    label: "Oracle-{{ item.major }}.{{ item.minor }}-x86_64-ISO"
+  become: false
+  run_once: true
+  delegate_to: localhost
+
+- name: Ability to add ISOs to the cluster/node | Oracle
+  when: oracle_arm64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: iso
+    validate_certs: false
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ oracle_url }}/OL{{ item.major }}/u{{ item.minor }}/aarch64/OracleLinux-R{{ item.major }}-U{{ item.minor }}-aarch64-boot-uek.iso"
+    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
+    # checksum_algorithm: sha256
+    template: "Oracle-{{ item.major }}.{{ item.minor }}-aarch64-minimal.iso"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ el_releases }}"
+  loop_control:
+    label: "AlmaLinux-{{ item.major }}.{{ item.minor }}-arm64-ISO"
+  become: false
+  run_once: true
+  delegate_to: localhost

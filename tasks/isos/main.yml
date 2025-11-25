@@ -63,9 +63,9 @@
   ansible.builtin.import_tasks:
     file: isos/alma_isos.yml
 
-- name: Add Oracle Linux ISO files
+- name: Add oracle ISO files
   when: download_oracle
-  tags: oracle
+  tags: rocky
   ansible.builtin.import_tasks:
     file: isos/oracle_isos.yml
 
@@ -74,12 +74,6 @@
   tags: rocky
   ansible.builtin.import_tasks:
     file: isos/rocky_isos.yml
-
-- name: Add Suse ISO files
-  when: download_suse
-  tags: suse
-  ansible.builtin.import_tasks:
-    file: isos/suse_isos.yml
 
 - name: Run undo settings on node
   tags: undo
