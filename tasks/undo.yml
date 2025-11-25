@@ -16,11 +16,12 @@
     path: /etc/apt/sources.list.d/pve-enterprise.list
     regexp: ^(#?)\s*(deb https:\/\/enterprise.proxmox.com\/debian\/pve {{ ansible_distribution_release }} pve-enterprise)
     line: '\2'
+    mode: 'o-x,go-wx'
 
 - name: Add no subscription repo
   when:
-  - not proxmox_enterprise
-  - proxmox_no_subscription_repo
+    - not proxmox_enterprise
+    - proxmox_no_subscription_repo
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
@@ -40,20 +41,20 @@
 
 - name: Disable unnecessary HA resources - single node
   when:
-  - proxmox_single_node
-  - proxmox_ha_disable
+    - proxmox_single_node
+    - proxmox_ha_disable
   ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: true
     state: started
   loop:
-  - pve-ha-lrm
-  - pve-ha-crm
+    - pve-ha-lrm
+    - pve-ha-crm
 
 - name: Disable unnecessary corosync resources - single node
   when:
-  - proxmox_single_node
-  - proxmox_corosync_disable
+    - proxmox_single_node
+    - proxmox_corosync_disable
   ansible.builtin.systemd:
     name: corosync
     enabled: true
@@ -69,5 +70,5 @@
     value: '1'
     sysctl_set: true
   loop:
-  - "net.ipv6.conf.all.disable_ipv6"
-  - "net.ipv6.conf.default.disable_ipv6"
+    - "net.ipv6.conf.all.disable_ipv6"
+    - "net.ipv6.conf.default.disable_ipv6"

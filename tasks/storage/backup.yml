@@ -15,6 +15,6 @@
       username: "{{ backup_username }}"
       password: "{{ backup_password }}"
       datastore: "{{ backup_datastore }}"
-      fingerprint: "{{ backup_fingerprint }"
+      fingerprint: "{{ backup_fingerprint }}"
       export: "{{ backup_export }}"
     content: ["backup"]

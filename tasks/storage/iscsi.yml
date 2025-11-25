@@ -14,4 +14,4 @@
     iscsi_options:
       portal: "{{ iscsi_portal }}"
       target: "{{ iscsi_target }}"
-    content: ["{{ iscsi_content | join ', ' }}"]
+    content: "{{ iscsi_content| join(',') }}"

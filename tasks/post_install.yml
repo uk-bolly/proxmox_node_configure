@@ -15,24 +15,25 @@
   vars:
     source_file: /etc/apt/sources.list.d/pve-enterprise.sources
   block:
-  - name: Disable Proxmox VE enterprise sources | Check file exists
-    ansible.builtin.stat:
-      path: "{{ source_file }}"
-    register: discovered_enterprise_source
-
-  - name: Disable Proxmox VE enterprise sources
-    when: discovered_enterprise_source.stat.exists
-    block:
-    - name: Disable Proxmox VE enterprise sources | Copy file
-      ansible.builtin.copy:
-        src: "{{ source_file }}"
-        dest: "{{ source_file }}-disabled"
-        remote_src: true
-
-    - name: Disable Proxmox VE enterprise sources | Remove original
-      ansible.builtin.file:
+    - name: Disable Proxmox VE enterprise sources | Check file exists
+      ansible.builtin.stat:
         path: "{{ source_file }}"
-        state: absent
+      register: discovered_enterprise_source
+
+    - name: Disable Proxmox VE enterprise sources
+      when: discovered_enterprise_source.stat.exists
+      block:
+        - name: Disable Proxmox VE enterprise sources | Copy file
+          ansible.builtin.copy:
+            src: "{{ source_file }}"
+            dest: "{{ source_file }}-disabled"
+            remote_src: true
+            mode: 'o-x,go-wx'
+
+        - name: Disable Proxmox VE enterprise sources | Remove original
+          ansible.builtin.file:
+            path: "{{ source_file }}"
+            state: absent
 
 - name: Disable Proxmox VE ceph sources
   when:
@@ -41,29 +42,30 @@
   vars:
     source_file: /etc/apt/sources.list.d/ceph.sources
   block:
-  - name:  Disable Proxmox VE ceph sources | Check file exists
-    ansible.builtin.stat:
-      path: "{{ source_file }}"
-    register: discovered_ceph_source
-
-  - name: Disable Proxmox VE enterprise sources
-    when: discovered_ceph_source.stat.exists
-    block:
-    - name:  Disable Proxmox VE ceph sources | Copy file
-      ansible.builtin.copy:
-        src: "{{ source_file }}"
-        dest: "{{ source_file }}-disabled"
-        remote_src: true
-
-    - name:  Disable Proxmox VE ceph sources | Remove original
-      ansible.builtin.file:
+    - name: Disable Proxmox VE ceph sources | Check file exists
+      ansible.builtin.stat:
         path: "{{ source_file }}"
-        state: absent
+      register: discovered_ceph_source
+
+    - name: Disable Proxmox VE enterprise sources
+      when: discovered_ceph_source.stat.exists
+      block:
+        - name: Disable Proxmox VE ceph sources | Copy file
+          ansible.builtin.copy:
+            src: "{{ source_file }}"
+            dest: "{{ source_file }}-disabled"
+            remote_src: true
+            mode: 'o-x,go-wx'
+
+        - name: Disable Proxmox VE ceph sources | Remove original
+          ansible.builtin.file:
+            path: "{{ source_file }}"
+            state: absent
 
 - name: Add no subscription repo
   when:
-  - not proxmox_enterprise
-  - proxmox_no_subscription_repo
+    - not proxmox_enterprise
+    - proxmox_no_subscription_repo
   ansible.builtin.template:
     src: pve-install-repo.sources.j2
     dest: /etc/apt/sources.list.d/pve-install-repo.sources
@@ -71,8 +73,8 @@
 
 - name: Adding 'pvetest' repository and set disabled
   when:
-  - not proxmox_enterprise
-  - proxmox_beta_test_repo
+    - not proxmox_enterprise
+    - proxmox_beta_test_repo
   ansible.builtin.template:
     src: pvetest-for-beta.sources.j2
     dest: /etc/apt/sources.list.d/pvetest-for-beta.sources
@@ -91,20 +93,20 @@
 
 - name: Disable unnecessary HA resources - single node
   when:
-  - proxmox_single_node
-  - proxmox_ha_disable
+    - proxmox_single_node
+    - proxmox_ha_disable
   ansible.builtin.systemd:
     name: "{{ item }}"
     enabled: false
     state: stopped
   loop:
-  - pve-ha-lrm
-  - pve-ha-crm
+    - pve-ha-lrm
+    - pve-ha-crm
 
 - name: Disable unnecessary corosync resources - single node
   when:
-  - proxmox_single_node
-  - proxmox_corosync_disable
+    - proxmox_single_node
+    - proxmox_corosync_disable
   ansible.builtin.systemd:
     name: corosync
     enabled: false
@@ -126,6 +128,6 @@
     value: '1'
     sysctl_set: true
   loop:
-  - "net.ipv6.conf.all.disable_ipv6"
-  - "net.ipv6.conf.default.disable_ipv6"
+    - "net.ipv6.conf.all.disable_ipv6"
+    - "net.ipv6.conf.default.disable_ipv6"
   register: discovered_ipv6_disable
