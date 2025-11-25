@@ -15,4 +15,3 @@
       portal: "{{ iscsi_portal }}"
       target: "{{ iscsi_target }}"
     content: ["{{ iscsi_content | join ', ' }}"]
-

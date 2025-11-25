@@ -19,4 +19,3 @@
 - name: Reboot system
   when: reboot_required
   ansible.builtin.reboot:
-
