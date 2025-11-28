@@ -1,0 +1,18 @@
+---
+
+- name: Import variables for AlmaLinux
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/almalinux.yml
+
+- name: Download ISOs
+  when: alma_iso
+  tags: alma_iso
+  ansible.builtin.import_tasks:
+    file: alma_isos.yml
+
+- name: Import alma cloud images
+  when: alma_image
+  tags: alma_image
+  ansible.builtin.import_tasks:
+    file: alma_import.yml

@@ -1,53 +1,47 @@
 ---
 
-- name: Ability to add ISOs to the cluster/node | Rocky
-  when: alma_amd64
+- name: Import qcow2 images | x86_64
+  when: debian_amd64
   community.proxmox.proxmox_template:
     api_host: "{{ proxmox_api_url }}"
     api_user: "{{ proxmox_api_user }}"
     api_port: "{{ proxmox_api_port }}"
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
-    content_type: iso
-    validate_certs: false
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_url }}{{ item.major }}.{{ item.minor }}/isos/x86_64/Rocky-{{ item.major }}.{{ item.minor }}-x86_64-minimal.iso"
-    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
-    # checksum_algorithm: sha256
-    template: "Rocky-{{ item.major }}.{{ item.minor }}-x86_64-minimal.iso"
+    url: "{{ debian_image_url }}{{ item.version }}/cloud/x86_64/images/debianLinux-{{ item.version }}-GenericCloud-latest.x86_64.qcow2"
     force: false
     timeout: 1800
     state: present
-  loop: "{{ el_releases }}"
+  loop: "{{ debian_releases }}"
   loop_control:
-    label: "Rocky-{{ item.major }}.{{ item.minor }}-x86_64-ISO"
+    label: "debian-{{ item.version }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
 
-- name: Ability to add ISOs to the cluster/node | Rocky
-  when: alma_arm64
+- name: Import qcow2 images | aarch64
+  when: debian_arm64
   community.proxmox.proxmox_template:
     api_host: "{{ proxmox_api_url }}"
     api_user: "{{ proxmox_api_user }}"
     api_port: "{{ proxmox_api_port }}"
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
-    content_type: iso
-    validate_certs: false
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_url }}{{ item.major }}.{{ item.minor }}/isos/aarch64/Rocky-{{ item.major }}.{{ item.minor }}-aarch64-minimal.iso"
-    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
-    # checksum_algorithm: sha256
-    template: "Rocky-{{ item.major }}.{{ item.minor }}-aarch64-minimal.iso"
+    url: "{{ debian_image_url }}{{ item.version }}/cloud/aarch64/images/debianLinux-{{ item.version }}-GenericCloud-latest.aarch64.qcow2"
     force: false
     timeout: 1800
     state: present
-  loop: "{{ el_releases }}"
+  loop: "{{ debian_releases }}"
   loop_control:
-    label: "AlmaLinux-{{ item.major }}.{{ item.minor }}-arm64-ISO"
+    label: "debian-{{ item.version }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

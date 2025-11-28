@@ -56,6 +56,7 @@ proxmox_api_url: "{{ ansible_host }}"
 proxmox_api_port: 8006
 proxmox_api_user: 'ansible_api@pve'
 proxmox_token_id: ansible
+validate_certs: false
 # The following are created and discovered during the play, bt can be set manually
 # The option to create user needs to be false
 # proxmox_api_token_id : # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
@@ -93,3 +94,73 @@ nfs_server:
       - "images"
       - "iso"
       - "import"
+
+## OSs
+
+download_el: true
+alma_iso: true
+alma_amd64: true
+alma_arm64: true
+alma_image: true
+alma_releases:
+  - version: 9
+    release: 7
+  - version: 10
+    release: 0
+
+oracle_iso: true
+oracle_amd64: true
+oracle_arm64: false
+oracle_image: true
+# Images this is set to get the latest release from the version number
+oracle_releases:
+  - version: 9
+    release: 7
+  - version: 10
+    release: 0
+
+rocky_iso: true
+rocky_amd64: true
+rocky_arm64: true
+rocky_image: true
+rocky_releases:
+  - version: 8
+    release: 10
+  - version: 9
+    release: 6
+  - version: 10
+    release: 1
+
+# SUSE based releases
+suse_iso: true
+suse_amd64: true
+suse_arm64: true
+suse_image: true
+suse_releases:
+  - version: 15
+    release: '6'
+    osname: Leap
+
+# Ubuntu Releases
+ubuntu_iso: true
+ubuntu_amd64: true
+ubuntu_arm64: true
+ubuntu_image: false
+ubuntu_releases:
+  - version: 22
+    release: '04'
+    min: 5
+  - version: 24
+    release: '04'
+    min: 3
+
+# Debian based releases
+deb_iso: true
+debian_amd64: true
+debian_arm64: true
+debian_image: false
+deb_rels:
+  - major: 12
+    minor: 12
+  - major: 13
+    minor: 2

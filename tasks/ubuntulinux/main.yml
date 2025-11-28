@@ -1,0 +1,18 @@
+---
+
+- name: Import variables for ubuntuLinux
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/ubuntulinux.yml
+
+- name: Download ISOs
+  when: ubuntu_iso
+  tags: ubuntu_iso
+  ansible.builtin.import_tasks:
+    file: ubuntu_isos.yml
+
+- name: Import ubuntu cloud images
+  when: ubuntu_image
+  tags: ubuntu_image
+  ansible.builtin.import_tasks:
+    file: ubuntu_import.yml

@@ -9,19 +9,19 @@
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
     content_type: iso
-    validate_certs: false
+    validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ suse_url }}/{{ item.major }}.{{ item.minor }}/iso/openSUSE-{{ item.osname }}-{{ item.major }}.{{ item.minor }}-NET-x86_64-Current.iso"
+    url: "{{ suse_iso_url }}/{{ item.version }}.{{ item.release }}/iso/openSUSE-{{ item.osname }}-{{ item.version }}.{{ item.release }}-NET-x86_64-Current.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "suse-{{ item.major }}.{{ item.minor }}-server-amd64.iso"
+    template: "Suse-{{ item.version }}.{{ item.release }}-server-amd64.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ suse_releases }}"
   loop_control:
-    label: "suse-{{ item.major }}-amd64-ISO"
+    label: "suse-{{ item.version }}-amd64-ISO"
   become: false
   run_once: true
   delegate_to: localhost
@@ -38,16 +38,16 @@
     validate_certs: false
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ suse_url }}/{{ item.major }}.{{ item.minor }}/iso/openSUSE-{{ item.osname }}-{{ item.major }}.{{ item.minor }}-NET-aarch64-Current.iso"
+    url: "{{ suse_iso_url }}/{{ item.version }}.{{ item.release }}/iso/openSUSE-{{ item.osname }}-{{ item.version }}.{{ item.release }}-NET-aarch64-Current.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "suse-{{ item.major }}.{{ item.minor }}-server-aarch64.iso"
+    template: "Suse-{{ item.version }}.{{ item.release }}-server-aarch64.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ suse_releases }}"
   loop_control:
-    label: "suse-{{ item.major }}-arm64-ISO"
+    label: "suse-{{ item.version }}-arm64-ISO"
   become: false
   run_once: true
   delegate_to: localhost

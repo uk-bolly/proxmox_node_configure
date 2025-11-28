@@ -1,0 +1,21 @@
+---
+
+- name: Import variables for OracleLinux
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/oraclelinux.yml
+
+- name: Download ISOs
+  when: oracle_iso
+  tags: oracle_iso
+  ansible.builtin.import_tasks:
+    file: oracle_isos.yml
+
+- name: Import oracle cloud images
+  when: oracle_image
+  tags: oracle_image
+  ansible.builtin.include_tasks:
+    file: oracle_import.yml
+  loop: "{{ oracle_releases }}"
+  loop_control:
+    label: "Oracle-{{ item.version }}-x86_64-qcow2"

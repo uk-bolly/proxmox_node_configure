@@ -1,0 +1,69 @@
+---
+- name: Get qcow2 images from oracle
+  when: oracle_amd64
+  run_once: true
+  delegate_to: localhost
+
+  block:
+    - name: Set fact for template naming
+      ansible.builtin.set_fact:
+        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.version }}-template.json
+
+    - name: Scrape Oracle Linux Templates Page
+      ansible.builtin.uri:
+        url: "{{ os_version_url }}"
+      register: template_name
+      delegate_to: localhost
+      become: false
+
+    - name: Import qcow2 images | x86_64
+      community.proxmox.proxmox_template:
+        api_host: "{{ proxmox_api_url }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_port: "{{ proxmox_api_port }}"
+        api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        content_type: import
+        validate_certs: "{{ validate_certs }}"
+        node: "{{ ansible_host }}"
+        storage: proxmox_nfs
+        url: "{{ oracle_image_url }}OL{{ item.version }}/u{{ template_name.json.release }}/x86_64/{{ template_name.json.kvm.image }}"
+        force: false
+        timeout: 1800
+        state: present
+      become: false
+- name: Get qcow2 images from oracle
+  when: oracle_arm64
+  block:
+    - name: Set fact for template naming
+      ansible.builtin.set_fact:
+        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.version }}_aarch64-template.json
+
+    - name: Scrape Oracle Linux Templates Page
+      ansible.builtin.uri:
+        url: "{{ os_version_url }}"
+      register: template_name
+      delegate_to: localhost
+      become: false
+
+    - name: Import qcow2 images | aarch64
+      community.proxmox.proxmox_template:
+        api_host: "{{ proxmox_api_url }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_port: "{{ proxmox_api_port }}"
+        api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        content_type: import
+        validate_certs: "{{ validate_certs }}"
+        node: "{{ ansible_host }}"
+        storage: proxmox_nfs
+        url: "{{ oracle_image_url }}OL{{ item.version }}/u{{ template_name.json.release }}/aarch64/{{ template_name.json.kvm.image }}"
+        force: false
+        timeout: 1800
+        state: present
+      loop: "{{ oracle_releases }}"
+      loop_control:
+        label: "Oracle-{{ item.version }}-aarch64-qcow2"
+      become: false
+      run_once: true
+      delegate_to: localhost

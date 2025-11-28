@@ -1,0 +1,18 @@
+---
+
+- name: Import variables for RockyLinux
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/rockylinux.yml
+
+- name: Download ISOs
+  when: rocky_iso
+  tags: rocky_iso
+  ansible.builtin.import_tasks:
+    file: rocky_isos.yml
+
+- name: Import Rocky cloud images
+  when: rocky_image
+  tags: rocky_image
+  ansible.builtin.import_tasks:
+    file: rocky_import.yml

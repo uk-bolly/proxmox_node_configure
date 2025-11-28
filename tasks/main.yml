@@ -52,34 +52,34 @@
     file: storage/nfs.yml
 
 - name: Add ubuntu ISO files
-  when: download_ubuntu
+  when: ubuntu_iso or ubuntu_image
   tags: ubuntu
   ansible.builtin.import_tasks:
-    file: isos/ubuntu_isos.yml
+    file: ubuntulinux/main.yml
 
-- name: Add almalinux ISO files
-  when: download_alma
+- name: Add AlmaLinux OSs to system
+  when: alma_iso or alma_image
   tags: alma
   ansible.builtin.import_tasks:
-    file: isos/alma_isos.yml
+    file: almalinux/main.yml
 
-- name: Add Oracle Linux ISO files
-  when: download_oracle
+- name: Add Oracle Linux OSs to system
+  when: oracle_iso or oracle_image
   tags: oracle
   ansible.builtin.import_tasks:
-    file: isos/oracle_isos.yml
+    file: oraclelinux/main.yml
 
-- name: Add Rocky ISO files
-  when: download_rocky
+- name: Add RockyLinux OSs to system
+  when: rocky_iso or rocky_image
   tags: rocky
   ansible.builtin.import_tasks:
-    file: isos/rocky_isos.yml
+    file: rockylinux/main.yml
 
-- name: Add Suse ISO files
-  when: download_suse
+- name: Add SuseLinux OSs to system
+  when: suse_iso or suse_image
   tags: suse
   ansible.builtin.import_tasks:
-    file: isos/suse_isos.yml
+    file: suselinux/main.yml
 
 - name: Run undo settings on node
   tags: undo

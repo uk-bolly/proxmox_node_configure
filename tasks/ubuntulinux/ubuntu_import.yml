@@ -1,6 +1,6 @@
 ---
 
-- name: Ability to add ISOs to the cluster/node | UBUNTU
+- name: Import qcow2 images | x86_64
   when: ubuntu_amd64
   community.proxmox.proxmox_template:
     api_host: "{{ proxmox_api_url }}"
@@ -8,25 +8,22 @@
     api_port: "{{ proxmox_api_port }}"
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
-    content_type: iso
-    validate_certs: false
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ ubuntu_url }}{{ item.major }}.{{ item.minor }}/ubuntu-{{ item.major }}.{{ item.minor }}.{{ item.min }}-live-server-amd64.iso"
-    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
-    # checksum_algorithm: sha256
-    template: "ubuntu-{{ item.major }}.{{ item.minor }}.{{ item.min }}-live-server-amd64.iso"
+    url: "{{ ubuntu_image_url }}{{ item.version }}/cloud/x86_64/images/ubuntuLinux-{{ item.version }}-GenericCloud-latest.x86_64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.major }}-amd64-ISO"
+    label: "ubuntu-{{ item.version }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
 
-- name: Ability to add ISOs to the cluster/node | UBUNTU
+- name: Import qcow2 images | aarch64
   when: ubuntu_arm64
   community.proxmox.proxmox_template:
     api_host: "{{ proxmox_api_url }}"
@@ -34,20 +31,17 @@
     api_port: "{{ proxmox_api_port }}"
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
-    content_type: iso
-    validate_certs: false
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "https://cdimage.ubuntu.com/releases/{{ item.major }}.{{ item.minor }}/release/ubuntu-{{ item.major }}.{{ item.minor }}.{{ item.min }}-live-server-arm64.iso"
-    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
-    # checksum_algorithm: sha256
-    template: "ubuntu-{{ item.major }}.{{ item.minor }}.{{ item.min }}-live-server-arm64.iso"
+    url: "{{ ubuntu_image_url }}{{ item.version }}/cloud/aarch64/images/ubuntuLinux-{{ item.version }}-GenericCloud-latest.aarch64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.major }}-arm64-ISO"
+    label: "ubuntu-{{ item.version }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

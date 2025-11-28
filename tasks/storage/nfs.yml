@@ -7,7 +7,7 @@
     api_port: "{{ proxmox_api_port }}"
     api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
     api_token_secret: "{{ proxmox_api_token_secret }}"
-    validate_certs: false
+    validate_certs: "{{ validate_certs }}"
     state: present
     name: proxmox_nfs
     nodes: "{{ groups['proxmox_nodes'] }}"

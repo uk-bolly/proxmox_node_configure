@@ -1,0 +1,53 @@
+---
+
+- name: Ability to add ISOs to the cluster/node | UBUNTU
+  when: debian_amd64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: iso
+    validate_certs: "{{ validate_certs }}"
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ debian_iso_url }}{{ item.version }}.{{ item.release }}/debian-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-amd64.iso"
+    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
+    # checksum_algorithm: sha256
+    template: "Debian-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-amd64.iso"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ debian_releases }}"
+  loop_control:
+    label: "debian-{{ item.version }}-amd64-ISO"
+  become: false
+  run_once: true
+  delegate_to: localhost
+
+- name: Ability to add ISOs to the cluster/node | UBUNTU
+  when: debian_arm64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: iso
+    validate_certs: false
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "https://cdimage.debian.com/releases/{{ item.version }}.{{ item.release }}/release/debian-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-arm64.iso"
+    # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
+    # checksum_algorithm: sha256
+    template: "Debian-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-arm64.iso"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ debian_releases }}"
+  loop_control:
+    label: "debian-{{ item.version }}-arm64-ISO"
+  become: false
+  run_once: true
+  delegate_to: localhost
