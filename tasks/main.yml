@@ -33,6 +33,11 @@
   ansible.builtin.import_tasks:
     file: generate_token.yml
 
+- name: Add resource pools
+  tags: pools
+  ansible.builtin.import_tasks:
+    file: resource_pools.yml
+
 - name: Add Storage - Backup
   when: backup_storage
   tags: backup
