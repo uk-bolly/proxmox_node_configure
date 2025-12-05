@@ -1,0 +1,22 @@
+---
+
+- name: Disable unnecessary HA resources - single node
+  when:
+    - proxmox_single_node
+    - proxmox_ha_disable
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: false
+    state: stopped
+  loop:
+    - pve-ha-lrm
+    - pve-ha-crm
+
+- name: Disable unnecessary corosync resources - single node
+  when:
+    - proxmox_single_node
+    - proxmox_corosync_disable
+  ansible.builtin.systemd:
+    name: corosync
+    enabled: false
+    state: stopped

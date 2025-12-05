@@ -91,34 +91,15 @@
     - { src: 'nonag_conf.j2', dest: '/etc/apt/apt.conf.d/no-nag-script', mode: '0644' }
   notify: Reinstall proxmox-toolkit
 
-- name: Disable unnecessary HA resources - single node
-  when:
-    - proxmox_single_node
-    - proxmox_ha_disable
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    enabled: false
-    state: stopped
-  loop:
-    - pve-ha-lrm
-    - pve-ha-crm
+- name: Setup resources if single node
+  tags: single_node
+  ansible.builtin.include_tasks:
+    file: single_node.yml
 
-- name: Disable unnecessary corosync resources - single node
-  when:
-    - proxmox_single_node
-    - proxmox_corosync_disable
-  ansible.builtin.systemd:
-    name: corosync
-    enabled: false
-    state: stopped
-
-- name: Update to latest packages
-  when: apply_updates
-  ansible.builtin.package:
-    name: "*"
-    state: latest
-    update_cache: true
-  notify: Reboot check
+- name: Setup resources if clustered
+  tags: cluster_node
+  ansible.builtin.include_tasks:
+    file: clustered_node.yml
 
 - name: Disable IPv6
   when: disable_ipv6
@@ -131,3 +112,11 @@
     - "net.ipv6.conf.all.disable_ipv6"
     - "net.ipv6.conf.default.disable_ipv6"
   register: discovered_ipv6_disable
+
+- name: Update to latest packages
+  when: apply_updates
+  ansible.builtin.package:
+    name: "*"
+    state: latest
+    update_cache: true
+  notify: Reboot check

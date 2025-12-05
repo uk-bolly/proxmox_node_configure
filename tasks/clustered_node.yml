@@ -1,0 +1,22 @@
+---
+
+- name: Enable HA resources - clustered node
+  when:
+    - not proxmox_single_node
+    - not proxmox_ha_disable
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - pve-ha-lrm
+    - pve-ha-crm
+
+- name: Enable necessary corosync resources - clustered node
+  when:
+    - proxmox_single_node
+    - proxmox_corosync_disable
+  ansible.builtin.systemd:
+    name: corosync
+    enabled: true
+    state: started
