@@ -3,6 +3,7 @@
 # Defaults that shouldn't need changing
 reboot_required: false
 
+# Minimum to allow fill playbook and configurations
 api_privileges:
   - Datastore.Allocate
   - Datastore.AllocateSpace
@@ -44,3 +45,13 @@ api_privileges:
   - VM.Replicate
   - VM.Snapshot
   - VM.Snapshot.Rollback
+
+# Packer templates
+
+bootloader:
+  - name: bios
+    type: "seabios"
+    command: "<tab><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>inst.text inst.ks=http://'{{ .HTTPIP }}:{{ .HTTPPort }}'/{{ os_version }}-bios-ks.cfg<enter><wait>"
+  - name: efi
+    type: "ovmf"
+    command: "e<down><down><end><bs><bs><bs><bs><bs>inst.text inst.nompath inst.ks=http://'{{ .HTTPIP }}:{{ .HTTPPort }}'/{{ os_version }}-efi-ks.cfg<leftCtrlOn>x<leftCtrlOff>"

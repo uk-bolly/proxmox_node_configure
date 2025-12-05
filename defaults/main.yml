@@ -9,7 +9,7 @@ debug_vars: false
 # file to show setting for proxmox configuration
 
 # If just a single node and not cluster
-proxmox_single_node: true
+proxmox_single_node: false
 
 # If server has a proxmox subscription
 proxmox_enterprise: false
@@ -35,9 +35,11 @@ proxmox_beta_enable: false
 # When not enterprise
 proxmox_disable_subscription_reminder: true
 
+cluster_name: homelab
+
 # Turn off HA service
 # When single node true
-proxmox_ha_disable: true
+proxmox_ha_disable: false
 
 # Turn off corosync services
 # When single node true
@@ -57,8 +59,8 @@ proxmox_api_port: 8006
 proxmox_api_user: 'ansible_api@pve'
 proxmox_token_id: ansible
 validate_certs: false
-# The following are created and discovered during the play, bt can be set manually
-# The option to create user needs to be false
+# The following are created and discovered during the play, but can be set manually
+# The option to create user needs to be false if you set the following
 # proxmox_api_token_id : # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
 # proxmox_api_token_secret: This is created and discovered
 
@@ -95,18 +97,38 @@ nfs_server:
       - "iso"
       - "import"
 
-## OSs
+# Resource Pools
+# Resource pools created where these are used during VM/container deployments
+resource_pools:
+  - debian
+  - el8
+  - el9
+  - el10
+  - el11
+  - suse
+  - ubuntu
+  - win_host
+  - win_server
 
-download_el: true
+## OSs
+# Each OS type has various option
+# Windows not yet worked upon
+## listed as shown
+# {os_name}_iso  - This states to download ISOs
+# {os_name}_image - This downloads the supplied image and imports direct from the vendor qcow2 format
+# {os_name}_amd64 - This downloads amd64/x86_64 versions of the iso
+# {os_name}_arm64 - This downloads arm64/aarch64 versions of the iso
+# {os_name}_releases - This is a list of Versions and release that you wish to download of the ISOimage
+
 alma_iso: true
+alma_image: true
 alma_amd64: true
 alma_arm64: true
-alma_image: true
 alma_releases:
-  - version: 9
-    release: 7
-  - version: 10
-    release: 0
+  - os_version: 9
+    os_release: 7
+  - os_version: 10
+    os_release: 1
 
 oracle_iso: true
 oracle_amd64: true
@@ -114,22 +136,22 @@ oracle_arm64: false
 oracle_image: true
 # Images this is set to get the latest release from the version number
 oracle_releases:
-  - version: 9
-    release: 7
-  - version: 10
-    release: 0
+  - os_version: 9
+    os_release: 7
+  - os_version: 10
+    os_release: 1
 
 rocky_iso: true
 rocky_amd64: true
 rocky_arm64: true
 rocky_image: true
 rocky_releases:
-  - version: 8
-    release: 10
-  - version: 9
-    release: 6
-  - version: 10
-    release: 1
+  - os_version: 8
+    os_release: 10
+  - os_version: 9
+    os_release: 6
+  - os_version: 10
+    os_release: 1
 
 # SUSE based releases
 suse_iso: true
@@ -137,8 +159,8 @@ suse_amd64: true
 suse_arm64: true
 suse_image: true
 suse_releases:
-  - version: 15
-    release: '6'
+  - os_version: 15
+    os_release: '6'
     osname: Leap
 
 # Ubuntu Releases
@@ -147,11 +169,11 @@ ubuntu_amd64: true
 ubuntu_arm64: true
 ubuntu_image: false
 ubuntu_releases:
-  - version: 22
-    release: '04'
+  - os_version: 22
+    os_release: '04'
     min: 5
-  - version: 24
-    release: '04'
+  - os_version: 24
+    os_release: '04'
     min: 3
 
 # Debian based releases
@@ -159,8 +181,16 @@ deb_iso: true
 debian_amd64: true
 debian_arm64: true
 debian_image: false
-deb_rels:
+debian_release:
   - major: 12
     minor: 12
   - major: 13
     minor: 2
+
+# Packer variable defaults
+# Others can be seen in vars/main.yml
+
+proxmox_vm_cpu_type: host
+proxmox_vm_cpu_sockets: 1
+proxmox_vm_cpu_core: 2
+proxmox_vm_memory: 2048
