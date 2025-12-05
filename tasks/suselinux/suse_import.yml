@@ -12,13 +12,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ suse_image_url }}{{ item.version }}.{{ item.release }}/appliances/openSUSE-{{ item.osname }}-{{ item.version }}.{{ item.release }}-Minimal-VM.x86_64-Cloud.qcow2"
+    url: "{{ suse_image_url }}{{ item.os_version }}.{{ item.os_release }}/appliances/openSUSE-{{ item.osname }}-{{ item.os_version }}.{{ item.os_release }}-Minimal-VM.x86_64-Cloud.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ suse_releases }}"
   loop_control:
-    label: "suse-{{ item.version }}-{{ item.osname }}-x86_64-qcow2"
+    label: "suse-{{ item.os_version }}-{{ item.osname }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
@@ -35,13 +35,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ suse_image_url }}{{ item.version }}.{{ item.release }}/appliances/openSUSE-{{ item.osname }}-{{ item.version }}.{{ item.release }}-Minimal-VM.aarch64-Cloud.qcow2"
+    url: "{{ suse_image_url }}{{ item.os_version }}.{{ item.os_release }}/appliances/openSUSE-{{ item.osname }}-{{ item.os_version }}.{{ item.os_release }}-Minimal-VM.aarch64-Cloud.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ suse_releases }}"
   loop_control:
-    label: "suse-{{ item.version }}-{{ item.osname }}-aarch64-qcow2"
+    label: "suse-{{ item.os_version }}-{{ item.osname }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

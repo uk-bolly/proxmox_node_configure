@@ -12,13 +12,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ debian_image_url }}{{ item.version }}/cloud/x86_64/images/debianLinux-{{ item.version }}-GenericCloud-latest.x86_64.qcow2"
+    url: "{{ debian_image_url }}{{ item.os_version }}/cloud/x86_64/images/debianLinux-{{ item.os_version }}-GenericCloud-latest.x86_64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ debian_releases }}"
   loop_control:
-    label: "debian-{{ item.version }}-x86_64-qcow2"
+    label: "debian-{{ item.os_version }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
@@ -35,13 +35,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ debian_image_url }}{{ item.version }}/cloud/aarch64/images/debianLinux-{{ item.version }}-GenericCloud-latest.aarch64.qcow2"
+    url: "{{ debian_image_url }}{{ item.os_version }}/cloud/aarch64/images/debianLinux-{{ item.os_version }}-GenericCloud-latest.aarch64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ debian_releases }}"
   loop_control:
-    label: "debian-{{ item.version }}-aarch64-qcow2"
+    label: "debian-{{ item.os_version }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

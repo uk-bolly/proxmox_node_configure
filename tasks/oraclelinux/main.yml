@@ -18,4 +18,4 @@
     file: oracle_import.yml
   loop: "{{ oracle_releases }}"
   loop_control:
-    label: "Oracle-{{ item.version }}-x86_64-qcow2"
+    label: "Oracle-{{ item.os_version }}-x86_64-qcow2"

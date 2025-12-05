@@ -12,13 +12,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ ubuntu_image_url }}{{ item.version }}/cloud/x86_64/images/ubuntuLinux-{{ item.version }}-GenericCloud-latest.x86_64.qcow2"
+    url: "{{ ubuntu_image_url }}{{ item.os_version }}/cloud/x86_64/images/ubuntuLinux-{{ item.os_version }}-GenericCloud-latest.x86_64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.version }}-x86_64-qcow2"
+    label: "ubuntu-{{ item.os_version }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
@@ -35,13 +35,13 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ ubuntu_image_url }}{{ item.version }}/cloud/aarch64/images/ubuntuLinux-{{ item.version }}-GenericCloud-latest.aarch64.qcow2"
+    url: "{{ ubuntu_image_url }}{{ item.os_version }}/cloud/aarch64/images/ubuntuLinux-{{ item.os_version }}-GenericCloud-latest.aarch64.qcow2"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.version }}-aarch64-qcow2"
+    label: "ubuntu-{{ item.os_version }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

@@ -12,16 +12,16 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ ubuntu_iso_url }}{{ item.version }}.{{ item.release }}/ubuntu-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-amd64.iso"
+    url: "{{ ubuntu_iso_url }}{{ item.os_version }}.{{ item.os_release }}/ubuntu-{{ item.os_version }}.{{ item.os_release }}.{{ item.min }}-live-server-amd64.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "Ubuntu-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-amd64.iso"
+    template: "Ubuntu-{{ item.os_version }}.{{ item.os_release }}.{{ item.min }}-live-server-amd64.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.version }}-amd64-ISO"
+    label: "ubuntu-{{ item.os_version }}-amd64-ISO"
   become: false
   run_once: true
   delegate_to: localhost
@@ -38,16 +38,16 @@
     validate_certs: false
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "https://cdimage.ubuntu.com/releases/{{ item.version }}.{{ item.release }}/release/ubuntu-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-arm64.iso"
+    url: "https://cdimage.ubuntu.com/releases/{{ item.os_version }}.{{ item.os_release }}/release/ubuntu-{{ item.os_version }}.{{ item.os_release }}.{{ item.min }}-live-server-arm64.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "Ubuntu-{{ item.version }}.{{ item.release }}.{{ item.min }}-live-server-arm64.iso"
+    template: "Ubuntu-{{ item.os_version }}.{{ item.os_release }}.{{ item.min }}-live-server-arm64.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ ubuntu_releases }}"
   loop_control:
-    label: "ubuntu-{{ item.version }}-arm64-ISO"
+    label: "ubuntu-{{ item.os_version }}-arm64-ISO"
   become: false
   run_once: true
   delegate_to: localhost

@@ -12,7 +12,7 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_image_url }}{{ item.version }}/images/x86_64/Rocky-{{ item.version }}-GenericCloud-Base.latest.x86_64.qcow2"
+    url: "{{ rocky_image_url }}{{ item.os_version }}/images/x86_64/Rocky-{{ item.os_version }}-GenericCloud-Base.latest.x86_64.qcow2"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
     force: false
@@ -20,7 +20,7 @@
     state: present
   loop: "{{ el_releases }}"
   loop_control:
-    label: "Rocky-{{ item.version }}-x86_64-qcow2"
+    label: "Rocky-{{ item.os_version }}-x86_64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost
@@ -37,7 +37,7 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_image_url }}{{ item.version }}/images/aarch64/Rocky-{{ item.version }}-GenericCloud-Base.latest.aarch64.qcow2"
+    url: "{{ rocky_image_url }}{{ item.os_version }}/images/aarch64/Rocky-{{ item.os_version }}-GenericCloud-Base.latest.aarch64.qcow2"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
     force: false
@@ -45,7 +45,7 @@
     state: present
   loop: "{{ el_releases }}"
   loop_control:
-    label: "Rocky-{{ item.version }}-aarch64-qcow2"
+    label: "Rocky-{{ item.os_version }}-aarch64-qcow2"
   become: false
   run_once: true
   delegate_to: localhost

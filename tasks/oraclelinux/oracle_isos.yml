@@ -12,16 +12,16 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ oracle_iso_url }}/OL{{ item.version }}/u{{ item.release }}/x86_64/OracleLinux-R{{ item.version }}-U{{ item.release }}-x86_64-boot.iso"
+    url: "{{ oracle_iso_url }}/OL{{ item.os_version }}/u{{ item.os_release }}/x86_64/OracleLinux-R{{ item.os_version }}-U{{ item.os_release }}-x86_64-boot.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "OracleLinux-{{ item.version }}.{{ item.release }}-x86_64-boot.iso"
+    template: "OracleLinux-{{ item.os_version }}.{{ item.os_release }}-x86_64-boot.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ oracle_releases }}"
   loop_control:
-    label: "Oracle-{{ item.version }}.{{ item.release }}-x86_64-ISO"
+    label: "Oracle-{{ item.os_version }}.{{ item.os_release }}-x86_64-ISO"
   become: false
   run_once: true
   delegate_to: localhost
@@ -38,16 +38,16 @@
     validate_certs: false
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ oracle_iso_url }}/OL{{ item.version }}/u{{ item.release }}/aarch64/OracleLinux-R{{ item.version }}-U{{ item.release }}-aarch64-boot-uek.iso"
+    url: "{{ oracle_iso_url }}/OL{{ item.os_version }}/u{{ item.os_release }}/aarch64/OracleLinux-R{{ item.os_version }}-U{{ item.os_release }}-aarch64-boot-uek.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "Oracle-{{ item.version }}.{{ item.release }}-aarch64-boot.iso"
+    template: "Oracle-{{ item.os_version }}.{{ item.os_release }}-aarch64-boot.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ oracle_releases }}"
   loop_control:
-    label: "OracleLinux-{{ item.version }}.{{ item.release }}-arm64-ISO"
+    label: "OracleLinux-{{ item.os_version }}.{{ item.os_release }}-arm64-ISO"
   become: false
   run_once: true
   delegate_to: localhost

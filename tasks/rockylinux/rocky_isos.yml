@@ -12,16 +12,16 @@
     validate_certs: "{{ validate_certs }}"
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_iso_url }}{{ item.version }}.{{ item.release }}/isos/x86_64/Rocky-{{ item.version }}.{{ item.release }}-x86_64-minimal.iso"
+    url: "{{ rocky_iso_url }}{{ item.os_version }}.{{ item.os_release }}/isos/x86_64/Rocky-{{ item.os_version }}.{{ item.os_release }}-x86_64-minimal.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "Rocky-{{ item.version }}.{{ item.release }}-x86_64-minimal.iso"
+    template: "Rocky-{{ item.os_version }}.{{ item.os_release }}-x86_64-minimal.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ rocky_releases }}"
   loop_control:
-    label: "Rocky-{{ item.version }}.{{ item.release }}-x86_64-ISO"
+    label: "Rocky-{{ item.os_version }}.{{ item.os_release }}-x86_64-ISO"
   become: false
   run_once: true
   delegate_to: localhost
@@ -38,16 +38,16 @@
     validate_certs: false
     node: "{{ ansible_host }}"
     storage: proxmox_nfs
-    url: "{{ rocky_iso_url }}{{ item.version }}.{{ item.release }}/isos/aarch64/Rocky-{{ item.version }}.{{ item.release }}-aarch64-minimal.iso"
+    url: "{{ rocky_iso_url }}{{ item.os_version }}.{{ item.os_release }}/isos/aarch64/Rocky-{{ item.os_version }}.{{ item.os_release }}-aarch64-minimal.iso"
     # checksum: "aed9449cf79eb2d1c365f4f2561f923a80451b3e8fdbf595889b4cf0ac6c58b8"
     # checksum_algorithm: sha256
-    template: "Rocky-{{ item.version }}.{{ item.release }}-aarch64-minimal.iso"
+    template: "Rocky-{{ item.os_version }}.{{ item.os_release }}-aarch64-minimal.iso"
     force: false
     timeout: 1800
     state: present
   loop: "{{ rocky_releases }}"
   loop_control:
-    label: "Rocky-{{ item.version }}.{{ item.release }}-arm64-ISO"
+    label: "Rocky-{{ item.os_version }}.{{ item.os_release }}-arm64-ISO"
   become: false
   run_once: true
   delegate_to: localhost

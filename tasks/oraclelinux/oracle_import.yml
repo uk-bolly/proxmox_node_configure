@@ -7,7 +7,7 @@
   block:
     - name: Set fact for template naming
       ansible.builtin.set_fact:
-        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.version }}-template.json
+        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.os_version }}-template.json
 
     - name: Scrape Oracle Linux Templates Page
       ansible.builtin.uri:
@@ -27,7 +27,7 @@
         validate_certs: "{{ validate_certs }}"
         node: "{{ ansible_host }}"
         storage: proxmox_nfs
-        url: "{{ oracle_image_url }}OL{{ item.version }}/u{{ template_name.json.release }}/x86_64/{{ template_name.json.kvm.image }}"
+        url: "{{ oracle_image_url }}OL{{ item.os_version }}/u{{ template_name.json.release }}/x86_64/{{ template_name.json.kvm.image }}"
         force: false
         timeout: 1800
         state: present
@@ -37,7 +37,7 @@
   block:
     - name: Set fact for template naming
       ansible.builtin.set_fact:
-        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.version }}_aarch64-template.json
+        os_version_url: https://yum.oracle.com/templates/OracleLinux/ol{{ item.os_version }}_aarch64-template.json
 
     - name: Scrape Oracle Linux Templates Page
       ansible.builtin.uri:
@@ -57,13 +57,13 @@
         validate_certs: "{{ validate_certs }}"
         node: "{{ ansible_host }}"
         storage: proxmox_nfs
-        url: "{{ oracle_image_url }}OL{{ item.version }}/u{{ template_name.json.release }}/aarch64/{{ template_name.json.kvm.image }}"
+        url: "{{ oracle_image_url }}OL{{ item.os_version }}/u{{ template_name.json.release }}/aarch64/{{ template_name.json.kvm.image }}"
         force: false
         timeout: 1800
         state: present
       loop: "{{ oracle_releases }}"
       loop_control:
-        label: "Oracle-{{ item.version }}-aarch64-qcow2"
+        label: "Oracle-{{ item.os_version }}-aarch64-qcow2"
       become: false
       run_once: true
       delegate_to: localhost
