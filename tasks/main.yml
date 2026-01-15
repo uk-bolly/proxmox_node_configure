@@ -14,7 +14,7 @@
 
 - name: Ensure only supported version
   ansible.builtin.assert:
-    that: discovered_proxmox_version.stdout is version_compare('9', '==')
+    that: discovered_proxmox_version.stdout is version_compare('9', '>=')
     fail_msg: "Sorry Proxmox VE {{ discovered_proxmox_version.stdout }} is not supported"
 
 - name: Run post install settings on node
@@ -85,6 +85,12 @@
   tags: suse
   ansible.builtin.import_tasks:
     file: suselinux/main.yml
+
+- name: Setup cluster
+  when: ansible_hostname in groups['master_node']
+  tags: cluster_setup
+  ansible.builtin.import_tasks:
+    file: cluster_setup.yml
 
 - name: Run undo settings on node
   tags: undo
