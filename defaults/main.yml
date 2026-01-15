@@ -182,6 +182,8 @@ debian_amd64: true
 debian_arm64: true
 debian_image: false
 debian_release:
+  - major: 11
+    minor: 11
   - major: 12
     minor: 12
   - major: 13
