@@ -1,0 +1,12 @@
+---
+
+- name: Import variables for Amazon2023
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/amazon23linux.yml
+
+- name: Import Amazon2023 cloud images
+  when: amazon23_image
+  tags: amazon23_image
+  ansible.builtin.import_tasks:
+    file: amazon2023_import.yml

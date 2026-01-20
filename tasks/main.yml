@@ -68,6 +68,12 @@
   ansible.builtin.import_tasks:
     file: almalinux/main.yml
 
+- name: Add Amazon2023 OS to system
+  when: amazon2023_image
+  tags: amazon23
+  ansible.builtin.import_tasks:
+    file: amazon2023/main.yml
+
 - name: Add Oracle Linux OSs to system
   when: oracle_iso or oracle_image
   tags: oracle

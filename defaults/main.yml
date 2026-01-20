@@ -130,6 +130,12 @@ alma_releases:
   - os_version: 10
     os_release: 1
 
+amazon2023_image: true
+amazon2023_amd64: true
+amazon2023_arm64: true
+amazon2023_releases:
+  - os_version: 10.20260105.0
+
 oracle_iso: true
 oracle_amd64: true
 oracle_arm64: false

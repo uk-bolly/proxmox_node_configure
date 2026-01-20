@@ -1,0 +1,47 @@
+---
+
+- name: Import qcow2 images | x86_64
+  when: amazon2023_amd64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ amazon2023_image_url }}/os-images/{{ item.os_version }}/kvm/al2023-kvm-2023.{{ item.os_version }}-kernel-6.1-x86_64.xfs.gpt.qcow2"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ amazon2023_releases }}"
+  loop_control:
+    label: "amazon2023-{{ item.os_version }}-x86_64-qcow2"
+  become: false
+  run_once: true
+  delegate_to: localhost
+
+- name: Import qcow2 images | aarch64
+  when: amazon2023_arm64
+  community.proxmox.proxmox_template:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    content_type: import
+    validate_certs: "{{ validate_certs }}"
+    node: "{{ ansible_host }}"
+    storage: proxmox_nfs
+    url: "{{ amazon2023_image_url }}/os-images/{{ item.os_version }}/kvm/al2023-kvm-2023.{{ item.os_version }}-kernel-6.1-arm64.xfs.gpt.qcow2"
+    force: false
+    timeout: 1800
+    state: present
+  loop: "{{ amazon2023_releases }}"
+  loop_control:
+    label: "amazon2023-{{ item.os_version }}-aarch64-qcow2"
+  become: false
+  run_once: true
+  delegate_to: localhost
