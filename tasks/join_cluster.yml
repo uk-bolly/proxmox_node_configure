@@ -1,0 +1,61 @@
+---
+
+- name: Get Details cluster info from master node
+  delegate_to: localhost
+  become: false
+  run_once: true
+  block:
+    - name: Get Details cluster info from master node
+      community.proxmox.proxmox_cluster_join_info:
+        api_host: "{{ proxmox_api_url }}"
+        api_user: "{{ proxmox_api_user }}"
+        api_port: "{{ proxmox_api_port }}"
+        api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+        api_token_secret: "{{ proxmox_api_token_secret }}"
+        validate_certs: "{{ validate_certs }}"
+      register: discovered_cluster_info
+
+    - name: Set fact for cluster fingerprint
+      ansible.builtin.set_fact:
+        cluster_fingerprint: "{{ discovered_cluster_info.cluster_join.nodelist.0.pve_fp }}"
+        master_node_ip: "{{ discovered_cluster_info.cluster_join.nodelist.0.ring0_addr }}"
+
+- name: Ensure host is setup to join cluster
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - pve-ha-crm.service
+    - pve-ha-lrm.service
+
+- name: Join host to cluster
+  when: ansible_hostname in groups['proxmox_nodes']
+  community.proxmox.proxmox_cluster:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: root@pam
+    api_port: "{{ proxmox_api_port }}"
+    api_password: "{{ ansible_password }}"
+    validate_certs: "{{ validate_certs }}"
+    master_ip: "{{ master_node_ip }}"
+    fingerprint: "{{ cluster_fingerprint }}"
+    state: present
+  delegate_to: localhost
+  become: false
+
+- name: Get cluster Status
+  when: ansible_hostname in groups['master_node']
+  community.proxmox.proxmox_cluster_status_info:
+    api_host: "{{ proxmox_api_url }}"
+    api_user: "{{ proxmox_api_user }}"
+    api_port: "{{ proxmox_api_port }}"
+    api_token_id: "{{ proxmox_token_id }}" # Make sure values is not full string as per proxmox e.g user@pam!token_name only token_name is variable
+    api_token_secret: "{{ proxmox_api_token_secret }}"
+    validate_certs: "{{ validate_certs }}"
+  register: discovered_cluster_status
+  delegate_to: localhost
+  become: false
+
+- name: Show cluster status
+  ansible.builtin.debug:
+    msg: " The cluster status is {{ discovered_cluster_status }}"

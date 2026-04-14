@@ -41,7 +41,8 @@ api_privileges:
   - VM.GuestAgent.FileSystemMgmt
   - VM.GuestAgent.FileWrite
   - VM.GuestAgent.Unrestricted
-  - VM.Migrate,VM.PowerMgmt
+  - VM.Migrate
+  - VM.PowerMgmt
   - VM.Replicate
   - VM.Snapshot
   - VM.Snapshot.Rollback

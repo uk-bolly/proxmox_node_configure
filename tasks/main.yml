@@ -29,7 +29,10 @@
     file: token_user.yml
 
 - name: Generate API token
-  tags: token
+  tags:
+    - token
+    - cluster_setup
+    - join_cluster
   ansible.builtin.import_tasks:
     file: generate_token.yml
 
@@ -93,10 +96,15 @@
     file: suselinux/main.yml
 
 - name: Setup cluster
-  when: ansible_hostname in groups['master_node']
   tags: cluster_setup
   ansible.builtin.import_tasks:
     file: cluster_setup.yml
+
+- name: Join cluster
+  tags:
+    - join_cluster
+  ansible.builtin.import_tasks:
+    file: join_cluster.yml
 
 - name: Run undo settings on node
   tags: undo
